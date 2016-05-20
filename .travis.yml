@@ -1,0 +1,10 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker pull oconnormi/centos-jdk
+  - sudo pip install grip
+before_script: make
+script: make test
