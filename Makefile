@@ -5,7 +5,7 @@ export tmpscriptdir ?= $(tmpdir)/scripts
 export tmpdocdir ?= $(tmpdir)/docs
 export distdir ?= $(builddir)/distributions
 export tmprender ?= $(builddir)/render
-export testdir ?= $(builddir)/docker_test
+export testdir ?= $(builddir)/test
 export depsdir ?= $(builddir)/deps
 #
 export prefix ?= $(builddir)
@@ -70,11 +70,8 @@ copy_versionfile:
 zip:
 	rm -rf $(distdir)/* && cd $(tmpdir) && zip -r $(distdir)/$(DISTNAME) ./*
 
-# test: build
-# 	[ ! -s $(testdir) ] || rm -rf $(testdir) && mkdir -p $(testdir)
-# 	unzip $(distdir)/$(DISTNAME) -d $(testdir)
-# 	cp $(testsrc)/*.sh $(testdir)
-# 	cp $(testsrc)/*.bats $(testdir)
-# 	[ -s $(depsdir)/bats ] || git clone https://github.com/sstephenson/bats.git $(depsdir)/bats
-# 	cp -r $(depsdir)/bats $(testdir)/
-# 	docker run -it --rm -v $(testdir):/app oconnormi/centos-jdk /bin/bash -c "/app/test_bootstrap.sh"
+test: build
+	[ ! -s $(testdir) ] || rm -rf $(testdir) && mkdir -p $(testdir)
+	unzip $(distdir)/$(DISTNAME) -d $(testdir)
+	cp $(testsrc)/*.ps1 $(testdir)
+	Vagrant up && Vagrant destroy -f
